@@ -1,0 +1,17 @@
+{
+    "name": "mkoubik/composer-updates",
+    "authors": [
+        {
+            "name": "Matej Koubik",
+            "email": "matej@koubik.name"
+        }
+    ],
+    "require": {
+    	"nette/nette": "2.0.*"
+    },
+    "autoload": {
+    	"psr-0": {
+    		"ComposerUpdates\\": "src/"
+    	}
+    }
+}
