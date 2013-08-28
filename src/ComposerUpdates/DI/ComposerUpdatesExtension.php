@@ -17,7 +17,7 @@ class ComposerUpdatesExtension extends Nette\Config\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('initializer'))
-			->setClass('ComposerUpdates\initializer', array($config['cacheDir'], $config['localConfigFile']));
+			->setClass('ComposerUpdates\Initializer', array($config['cacheDir'], $config['localConfigFile']));
 
 		$builder->addDefinition($this->prefix('service'))
 			->setClass('ComposerUpdates\Service');
