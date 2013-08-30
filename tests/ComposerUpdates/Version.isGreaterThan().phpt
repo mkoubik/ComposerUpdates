@@ -7,12 +7,18 @@ use ComposerUpdates\NullVersion;
 require __DIR__ . '/bootstrap.php';
 
 $v09 = new Version(new Package('test', '0.9.0.0', 'v0.9.0'));
+$v09rc = new Version(new Package('test', '0.9.0.0-rc', 'v0.9.0-rc'));
 $v1 = new Version(new Package('test', '1.0.0.0', 'v1.0.0'));
 $null = new NullVersion();
 
 Assert::true($v1->isGreaterThan($v09));
+Assert::true($v09->isGreaterThan($v09rc));
 Assert::false($v09->isGreaterThan($v1));
+Assert::false($v09rc->isGreaterThan($v09));
+
 Assert::false($v09->isGreaterThan($v09));
+Assert::false($v09rc->isGreaterThan($v09rc));
+Assert::false($v1->isGreaterThan($v1));
 
 Assert::true($v09->isGreaterThan($null));
 Assert::true($v1->isGreaterThan($null));

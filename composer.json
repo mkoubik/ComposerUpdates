@@ -8,6 +8,7 @@
     ],
     "require": {
         "composer/composer": "@dev",
+        "icecave/semver": "@dev",
     	"nette/nette": "2.0.*"
     },
     "require-dev": {
