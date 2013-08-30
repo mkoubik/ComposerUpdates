@@ -10,6 +10,9 @@
         "composer/composer": "@dev",
     	"nette/nette": "2.0.*"
     },
+    "require-dev": {
+        "nette/tester": "@dev"
+    },
     "autoload": {
     	"psr-0": {
     		"ComposerUpdates\\": "src/"
