@@ -12,12 +12,18 @@ class Service
 		$this->initializer = $initializer;
 	}
 
+	/**
+	 * @return PackageInfo[]
+	 */
 	public function getPackages()
 	{
 		$requires = $this->initializer->getRequires();
 		return $this->getPackagesFromRequires($requires);
 	}
 
+	/**
+	 * @return PackageInfo[]
+	 */
 	public function getDevPackages()
 	{
 		$requires = $this->initializer->getDevRequires();

@@ -12,6 +12,11 @@ class PackageInfo
 	/** @var Version[] */
 	private $newVersions;
 
+	/**
+	 * @param string $name
+	 * @param Version $installedVersion
+	 * @param Version[] $newVersions
+	 */
 	public function __construct($name, Version $installedVersion, array $newVersions)
 	{
 		$this->name = $name;
@@ -24,6 +29,9 @@ class PackageInfo
 		return $this->name;
 	}
 
+	/**
+	 * @return Version
+	 */
 	public function getInstalledVersion()
 	{
 		return $this->installedVersion;
@@ -34,6 +42,9 @@ class PackageInfo
 		return count($this->newVersions) > 0;
 	}
 
+	/**
+	 * @return Version
+	 */
 	public function getAvailableVersion()
 	{
 		$max = new NullVersion();

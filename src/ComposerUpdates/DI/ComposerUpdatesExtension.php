@@ -27,15 +27,4 @@ class ComposerUpdatesExtension extends Nette\Config\CompilerExtension
 			->addSetup('register')
 			->addTag('run');
 	}
-
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
-	{
-		// $container = $this->getContainerBuilder();
-
-		// $initialize = $class->methods['initialize'];
-		// $initialize->addBody($container->formatPhp(
-		// 	'Nette\Diagnostics\Debugger::$bar->addPAnel(?)',
-		// 	new Nette\DI\Statement($this->prefix('panel'))
-		// ));
-	}
 }

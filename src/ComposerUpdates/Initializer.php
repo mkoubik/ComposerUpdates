@@ -2,30 +2,38 @@
 
 namespace ComposerUpdates;
 
+use Composer;
+
 class Initializer
 {
 	private $cacheDir;
 	private $localConfigFile;
 
+	/** @var Composer\IO\IOInterface */
 	private $io;
 
+	/** @var Composer\Config */
 	private $config;
 
 	private $localConfig;
 
+	/** @var Composer\Repository\RepositoryManager */
 	private $repositoryManager;
 
+	/** @var Composer\Repository\RepositoryInterface */
 	private $installedRepository;
 
+	/** @var Composer\PAckage\RootPackageInterface */
 	private $rootPackage;
 
+	/** @var Composer\DependencyResolver\Pool */
 	private $packagePool;
 
 	public function __construct($cacheDir, $localConfigFile)
 	{
 		$this->cacheDir = $cacheDir . '/_ComposerUpdates';
 		$this->localConfigFile = $localConfigFile;
-		$this->io = new \Composer\IO\NullIO();
+		$this->io = new Composer\IO\NullIO();
 	}
 
 	public function getInstalledRepository()
@@ -38,13 +46,13 @@ class Initializer
 			$installedRootPackage->setDevRequires(array());
 
 			$localRepo = $this->getRepositoryManager()->getLocalRepository();
-			$platformRepo = new \Composer\Repository\PlatformRepository();
+			$platformRepo = new Composer\Repository\PlatformRepository();
 			$repos = array(
 				$localRepo,
-				new \Composer\Repository\InstalledArrayRepository(array($installedRootPackage)),
+				new Composer\Repository\InstalledArrayRepository(array($installedRootPackage)),
 				$platformRepo,
 			);
-			$this->installedRepository = new \Composer\Repository\CompositeRepository($repos);
+			$this->installedRepository = new Composer\Repository\CompositeRepository($repos);
 		}
 		return $this->installedRepository;
 	}
@@ -52,10 +60,10 @@ class Initializer
 	public function getPackagePool()
 	{
 		if ($this->packagePool === NULL) {
-			$factory = new \Composer\Factory;
+			$factory = new Composer\Factory;
 			$repos = $factory->createDefaultRepositories($this->io, $this->getConfig(), $this->getRepositoryManager());
-			$repository = new \Composer\Repository\CompositeRepository($repos);
-			$this->packagePool = new \Composer\DependencyResolver\Pool();
+			$repository = new Composer\Repository\CompositeRepository($repos);
+			$this->packagePool = new Composer\DependencyResolver\Pool();
 			$this->packagePool->addRepository($repository);
 		}
 		return $this->packagePool;
@@ -74,10 +82,10 @@ class Initializer
 	private function getConfig()
 	{
 		if ($this->config === NULL || $this->localConfig === NULL) {
-			$json = new \Composer\Json\JsonFile($this->localConfigFile);
+			$json = new Composer\Json\JsonFile($this->localConfigFile);
 			$this->localConfig = $json->read();
 
-			$this->config = new \Composer\Config;
+			$this->config = new Composer\Config;
 			$this->config->merge(array(
 				'config' => array(
 					'cache-dir' => $this->cacheDir,
@@ -96,7 +104,7 @@ class Initializer
 	private function getRepositoryManager()
 	{
 		if ($this->repositoryManager === NULL) {
-			$this->repositoryManager = new \Composer\Repository\RepositoryManager($this->io, $this->getConfig());
+			$this->repositoryManager = new Composer\Repository\RepositoryManager($this->io, $this->getConfig());
 			$this->repositoryManager->setRepositoryClass('composer', 'Composer\Repository\ComposerRepository');
 			$this->repositoryManager->setRepositoryClass('vcs', 'Composer\Repository\VcsRepository');
 			$this->repositoryManager->setRepositoryClass('package', 'Composer\Repository\PackageRepository');
@@ -106,8 +114,8 @@ class Initializer
 			$this->repositoryManager->setRepositoryClass('hg', 'Composer\Repository\VcsRepository');
 			$this->repositoryManager->setRepositoryClass('artifact', 'Composer\Repository\ArtifactRepository');
 
-			$json = new \Composer\Json\JsonFile($this->getVendorDir() . '/composer/installed.json');
-			$localRepo = new \Composer\Repository\InstalledFilesystemRepository($json);
+			$json = new Composer\Json\JsonFile($this->getVendorDir() . '/composer/installed.json');
+			$localRepo = new Composer\Repository\InstalledFilesystemRepository($json);
 			$this->repositoryManager->setLocalRepository($localRepo);
 		}
 		return $this->repositoryManager;
@@ -116,7 +124,7 @@ class Initializer
 	private function getRootPackage()
 	{
 		if ($this->rootPackage === NULL) {
-			$loader = new \Composer\Package\Loader\RootPackageLoader($this->getRepositoryManager(), $this->getConfig());
+			$loader = new Composer\Package\Loader\RootPackageLoader($this->getRepositoryManager(), $this->getConfig());
 			$this->getConfig();
 			$this->rootPackage = $loader->load($this->localConfig);
 		}
