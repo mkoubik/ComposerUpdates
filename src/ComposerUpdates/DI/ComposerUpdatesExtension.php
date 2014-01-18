@@ -4,7 +4,7 @@ namespace ComposerUpdates\DI;
 
 use Nette;
 
-class ComposerUpdatesExtension extends Nette\Config\CompilerExtension
+class ComposerUpdatesExtension extends Nette\DI\CompilerExtension
 {
 	private $defaults = array(
 		'cacheDir' => NULL,

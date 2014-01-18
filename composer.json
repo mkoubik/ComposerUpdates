@@ -1,22 +1,22 @@
 {
-    "name": "mkoubik/composer-updates",
-    "authors": [
-        {
-            "name": "Matej Koubik",
-            "email": "matej@koubik.name"
-        }
-    ],
-    "require": {
-        "composer/composer": "@dev",
-        "icecave/semver": "@dev",
-    	"nette/nette": "2.0.*"
-    },
-    "require-dev": {
-        "nette/tester": "@dev"
-    },
-    "autoload": {
-    	"psr-0": {
-    		"ComposerUpdates\\": "src/"
-    	}
-    }
+	"name": "mkoubik/composer-updates",
+	"authors": [
+		{
+			"name": "Matej Koubik",
+			"email": "matej@koubik.name"
+		}
+	],
+	"require": {
+		"nette/nette": "~2.1.0",
+		"composer/composer": "@dev",
+		"icecave/semver": "@dev"
+	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"ComposerUpdates\\": "src/"
+		}
+	}
 }
