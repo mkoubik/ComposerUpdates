@@ -43,13 +43,13 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 		if (empty($this->packages)) {
 			return;
 		}
-		
+
 		uasort($this->packages, function (ComposerUpdates\PackageInfo $package1, ComposerUpdates\PackageInfo $package2) {
 			$update1 = $package1->isUpdateAvailable();
 			$update2 = $package2->isUpdateAvailable();
 			return $update1 !== $update2 ? $update1 < $update2 : $package1->getName() > $package2->getName();
 		});
-		
+
 		return self::render(__DIR__ . '/templates/panel.phtml', array(
 			'packages' => $this->packages,
 		));

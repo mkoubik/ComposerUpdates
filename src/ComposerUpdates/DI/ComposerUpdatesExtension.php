@@ -14,11 +14,11 @@ class ComposerUpdatesExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$config = $this->getConfig($this->defaults);
-		
+
 		if (!is_dir($config['cacheDir']) || !is_file($config['localConfigFile'])) {
 			throw new \InvalidArgumentException("Please configure the ComposerUpdates extensions using the section '{$this->name}:' in your config file.");
 		}
-		
+
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('initializer'))
