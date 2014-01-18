@@ -10,9 +10,19 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	/** @var ComposerUpdates\PackageInfo[] */
 	private $packages;
 
-	public function __construct(ComposerUpdates\Service $service)
+	public function __construct($rootDir, ComposerUpdates\Service $service, Nette\Caching\IStorage $storage)
 	{
-		$this->packages = $service->getPackages();
+		$cache = new Nette\Caching\Cache($storage, 'ComposerUpdates.panel');
+		$this->packages = $cache->load($rootDir, function (& $dependencies) use ($rootDir, $service) {
+			$dependencies = array(
+				Nette\Caching\Cache::EXPIRATION => '1 hour',
+				Nette\Caching\Cache::FILES => array(
+					$rootDir . '/composer.json',
+					$rootDir . '/composer.lock',
+				),
+			);
+			return $service->getPackages();
+		});
 	}
 
 	/**

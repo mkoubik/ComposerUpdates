@@ -7,7 +7,7 @@ use Composer;
 class Initializer
 {
 	private $cacheDir;
-	private $localConfigFile;
+	private $rootDir;
 
 	/** @var Composer\IO\IOInterface */
 	private $io;
@@ -29,10 +29,10 @@ class Initializer
 	/** @var Composer\DependencyResolver\Pool */
 	private $packagePool;
 
-	public function __construct($cacheDir, $localConfigFile)
+	public function __construct($cacheDir, $rootDir)
 	{
-		$this->cacheDir = $cacheDir . '/_ComposerUpdates';
-		$this->localConfigFile = $localConfigFile;
+		$this->cacheDir = $cacheDir . '/_ComposerUpdates.composer';
+		$this->rootDir = $rootDir;
 		$this->io = new Composer\IO\NullIO();
 	}
 
@@ -82,7 +82,7 @@ class Initializer
 	private function getConfig()
 	{
 		if ($this->config === NULL || $this->localConfig === NULL) {
-			$json = new Composer\Json\JsonFile($this->localConfigFile);
+			$json = new Composer\Json\JsonFile($this->rootDir . '/composer.json');
 			$this->localConfig = $json->read();
 
 			$this->config = new Composer\Config;
@@ -98,7 +98,7 @@ class Initializer
 
 	private function getVendorDir()
 	{
-		return dirname($this->localConfigFile) . '/' . $this->getConfig()->get('vendor-dir');
+		return $this->rootDir . '/' . $this->getConfig()->get('vendor-dir');
 	}
 
 	private function getRepositoryManager()
