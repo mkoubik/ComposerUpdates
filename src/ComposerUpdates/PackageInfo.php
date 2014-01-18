@@ -4,26 +4,39 @@ namespace ComposerUpdates;
 
 class PackageInfo
 {
+	const STATUS_NO_UPDATE = 0;
+	const STATUS_INCOMPATIBLE_UPDATE = 1;
+	const STATUS_COMPATIBLE_UPDATE = 2;
+
+	/** @var string*/
 	private $name;
 
 	/** @var Version */
 	private $installedVersion;
-	
+
 	/** @var Version[] */
-	private $newVersions;
+	private $compatibleUpdates;
+
+	/** @var Version[] */
+	private $incompatibleUpdates;
 
 	/**
 	 * @param string $name
 	 * @param Version $installedVersion
-	 * @param Version[] $newVersions
+	 * @param Version[] $compatibleUpdates
+	 * @param Version[] $incompatibleUpdates
 	 */
-	public function __construct($name, Version $installedVersion, array $newVersions)
+	public function __construct($name, Version $installedVersion, array $compatibleUpdates, array $incompatibleUpdates)
 	{
 		$this->name = $name;
 		$this->installedVersion = $installedVersion;
-		$this->newVersions = $newVersions;
+		$this->compatibleUpdates = $compatibleUpdates;
+		$this->incompatibleUpdates = $incompatibleUpdates;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
@@ -38,20 +51,56 @@ class PackageInfo
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getStatus()
+	{
+		if ($this->compatibleUpdates) {
+			return self::STATUS_COMPATIBLE_UPDATE;
+		} elseif ($this->incompatibleUpdates) {
+			return self::STATUS_INCOMPATIBLE_UPDATE;
+		} else {
+			return self::STATUS_NO_UPDATE;
+		}
+	}
+
+	/**
 	 * @return bool
 	 */	 	
-	public function isUpdateAvailable()
+	public function isCompatibleUpdateAvailable()
 	{
-		return count($this->newVersions) > 0;
+		return (bool) $this->compatibleUpdates;
+	}
+	
+	/**
+	 * @return bool
+	 */	 	
+	public function isIncompatibleUpdateAvailable()
+	{
+		return (bool) $this->incompatibleUpdates;
 	}
 
 	/**
 	 * @return Version
 	 */
-	public function getAvailableVersion()
+	public function getCompatibleUpdate()
 	{
 		$max = new NullVersion();
-		foreach ($this->newVersions as $version) {
+		foreach ($this->compatibleUpdates as $version) {
+			if ($version->isGreaterThan($max)) {
+				$max = $version;
+			}
+		}
+		return $max;
+	}
+	
+	/**
+	 * @return Version
+	 */
+	public function getIncompatibleUpdate()
+	{
+		$max = new NullVersion();
+		foreach ($this->incompatibleUpdates as $version) {
 			if ($version->isGreaterThan($max)) {
 				$max = $version;
 			}

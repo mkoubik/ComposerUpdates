@@ -21,15 +21,20 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	 */
 	public function getTab()
 	{
-		if (empty($this->packages)) {
+		if (!$this->packages) {
 			return;
 		}
 		
-		$updates = array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
-			return $package->isUpdateAvailable();
-		});
+		$status = max(array_map(function(ComposerUpdates\PackageInfo $package) {
+			return $package->getStatus();
+		}, $this->packages));
+		
+		$updates = count(array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
+			return $package->getStatus();
+		}));
 
 		return self::render(__DIR__ . '/templates/tab.phtml', array(
+			'status' => $status,
 			'updates' => $updates,
 		));
 	}
@@ -40,18 +45,19 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	 */
 	public function getPanel()
 	{
-		if (empty($this->packages)) {
+		if (!$this->packages) {
 			return;
 		}
 
-		uasort($this->packages, function (ComposerUpdates\PackageInfo $package1, ComposerUpdates\PackageInfo $package2) {
-			$update1 = $package1->isUpdateAvailable();
-			$update2 = $package2->isUpdateAvailable();
-			return $update1 !== $update2 ? $update1 < $update2 : $package1->getName() > $package2->getName();
+		$packages = $this->packages;
+		uksort($packages, function ($key1, $key2) use ($packages) {
+			$status1 = $packages[$key1]->getStatus();
+			$status2 = $packages[$key2]->getStatus();
+			return $status1 !== $status2 ? $status1 < $status2 : $key1 > $key2;
 		});
 
 		return self::render(__DIR__ . '/templates/panel.phtml', array(
-			'packages' => $this->packages,
+			'packages' => $packages,
 		));
 	}
 

@@ -1,6 +1,6 @@
 <style>
 #nette-debug .nette-composerUpdatesPanel .nette-inner {
-	width: 500px;
+	width: 700px;
 }
 #nette-debug .nette-composerUpdatesPanel table {
 	width: 100%;
@@ -13,21 +13,33 @@
 	vertical-align: middle;
 	margin-top: -2px;
 }
-#nette-debug .nette-composerUpdatesPanel .update-available,
-#nette-debug .nette-composerUpdatesPanel .no-update {
+#nette-debug .nette-composerUpdatesPanel .no-update,
+#nette-debug .nette-composerUpdatesPanel .incompatible-update,
+#nette-debug .nette-composerUpdatesPanel .compatible-update {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 	border-radius: 8px;
 	margin-right: 3px;
 }
-#nette-debug .nette-composerUpdatesPanel .update-available {
-	background: #FFC029;
-}
 #nette-debug .nette-composerUpdatesPanel .no-update {
 	background: #599B4A;
 }
+#nette-debug .nette-composerUpdatesPanel .incompatible-update {
+	background: #FFC029;
+}
+#nette-debug .nette-composerUpdatesPanel .compatible-update {
+	background: #E60000;
+}
 </style>
+
+<?php
+$classes = array(
+	\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE => 'no-update',
+	\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE => 'incompatible-update',
+	\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE => 'compatible-update',
+);
+?>
 
 <div class="nette-composerUpdatesPanel">
 	<h1>Composer updates</h1>
@@ -37,26 +49,28 @@
 				<tr>
 					<th>Package</th>
 					<th>Version</th>
-					<th>Update</th>
+					<th>Compatible</th>
+					<th>Incompatible</th>
 				</tr>
 			</thead>
 			<tbody>
 			<?php foreach ($packages as $package) { ?>
 				<tr>
 					<td>
-						<?php if ($package->isUpdateAvailable()) { ?>
-							<span class="update-available"></span>
-						<?php } else { ?>
-							<span class="no-update"></span>
-						<?php } ?>
+						<span class="<?php echo $classes[$package->getStatus()] ?>"></span>
 						<?php echo str_replace('/', ' / ', $package->getName()) ?>
 					</td>
 					<td>
 						<?php echo $package->getInstalledVersion() ?>
 					</td>
 					<td>
-						<?php if ($package->isUpdateAvailable()) { ?>
-						<?php echo $package->getAvailableVersion() ?> available
+						<?php if ($package->isCompatibleUpdateAvailable()) { ?>
+						<?php echo $package->getCompatibleUpdate() ?> available
+						<?php } ?>
+					</td>
+					<td>
+						<?php if ($package->isIncompatibleUpdateAvailable()) { ?>
+						<?php echo $package->getIncompatibleUpdate() ?> available
 						<?php } ?>
 					</td>
 				</tr>

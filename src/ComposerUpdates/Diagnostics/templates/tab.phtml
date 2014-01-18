@@ -1,6 +1,7 @@
 <style>
-#nette-debug .nette-composerUpdatesTab .update-available,
-#nette-debug .nette-composerUpdatesTab .no-update {
+#nette-debug .nette-composerUpdatesTab .no-update,
+#nette-debug .nette-composerUpdatesTab .incompatible-update,
+#nette-debug .nette-composerUpdatesTab .compatible-update {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -8,18 +9,30 @@
 	margin-bottom: -4px;
 	border-radius: 8px;
 }
-#nette-debug .nette-composerUpdatesTab .update-available {
-	background: #FFC029;
-}
 #nette-debug .nette-composerUpdatesTab .no-update {
 	background: #599B4A;
 }
+#nette-debug .nette-composerUpdatesTab .incompatible-update {
+	background: #FFC029;
+}
+#nette-debug .nette-composerUpdatesTab .compatible-update {
+	background: #E60000;
+}
 </style>
 
+<?php
+$classes = array(
+	\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE => 'no-update',
+	\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE => 'incompatible-update',
+	\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE => 'compatible-update',
+);
+?>
+
 <span title="Composer updates" class="nette-composerUpdatesTab">
+	<span class="<?php echo $classes[$status] ?>"></span>
 	<?php if (!$updates) { ?>
-	<span class="no-update"></span>&nbsp;up to date
+	&nbsp;no update
 	<?php } else { ?>
-	<span class="update-available"></span>&nbsp;<?php echo count($updates) . ' ' . (count($updates) === 1 ? 'update' : 'updates') ?>
+	&nbsp;<?php echo $updates . ' ' . ($updates === 1 ? 'update' : 'updates') ?>
 	<?php } ?>
 </span>

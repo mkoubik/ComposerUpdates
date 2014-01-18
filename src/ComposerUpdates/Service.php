@@ -44,15 +44,25 @@ class Service
 
 		foreach ($requires as $link) {
 			$name = $link->getTarget();
+			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
+			
 			$provides = $pool->whatProvides($name, $link->getConstraint());
 			$versions = array_map(function ($package) {
 				return new Version($package);
 			}, $provides);
-			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
-			$newVersions = array_filter($versions, function($version) use ($currentVersion) {
+			$compatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
 				return $version->isGreaterThan($currentVersion);
 			});
-			$packages[] = new PackageInfo($name, $installedVersions[$name], $newVersions);
+			
+			$provides = $pool->whatProvides($name);
+			$versions = array_map(function ($package) {
+				return new Version($package);
+			}, $provides);
+			$incompatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
+				return $version->isGreaterThan($currentVersion);
+			});
+			
+			$packages[] = new PackageInfo($name, $installedVersions[$name], $compatibleUpdates, $incompatibleUpdates);
 		}
 
 		return $packages;
