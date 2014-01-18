@@ -36,8 +36,8 @@ $classes = array(
 <span title="Composer updates" class="nette-composerUpdatesTab">
 	<span class="<?php echo $classes[$status] ?>"></span>
 	<?php if (!$updates) { ?>
-	&nbsp;no update
+	no update
 	<?php } else { ?>
-	&nbsp;<?php echo $updates . ' ' . ($updates === 1 ? 'update' : 'updates') ?>
+	<?php echo $updates . ' ' . ($updates === 1 ? 'update' : 'updates') ?>
 	<?php } ?>
 </span>
