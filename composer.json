@@ -4,6 +4,10 @@
 		{
 			"name": "Matej Koubik",
 			"email": "matej@koubik.name"
+		},
+		{
+			"name": "Jáchym Toušek",
+			"email": "enumag@gmail.com"
 		}
 	],
 	"license": ["BSD-2-Clause"],
