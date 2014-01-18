@@ -13,6 +13,7 @@
 	vertical-align: middle;
 	margin-top: -2px;
 }
+#nette-debug .nette-composerUpdatesPanel .not-installed,
 #nette-debug .nette-composerUpdatesPanel .no-update,
 #nette-debug .nette-composerUpdatesPanel .incompatible-update,
 #nette-debug .nette-composerUpdatesPanel .compatible-update {
@@ -21,6 +22,9 @@
 	height: 16px;
 	border-radius: 8px;
 	margin-right: 3px;
+}
+#nette-debug .nette-composerUpdatesPanel .not-installed {
+	background: #B1B1B1;
 }
 #nette-debug .nette-composerUpdatesPanel .no-update {
 	background: #599B4A;
@@ -35,6 +39,7 @@
 
 <?php
 $classes = array(
+	\ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED => 'not-installed',
 	\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE => 'no-update',
 	\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE => 'incompatible-update',
 	\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE => 'compatible-update',

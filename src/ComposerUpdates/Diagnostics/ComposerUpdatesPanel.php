@@ -40,7 +40,8 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 		}, $this->packages));
 
 		$updates = count(array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
-			return $package->getStatus();
+			$status = $package->getStatus();
+			return $status !== ComposerUpdates\PackageInfo::STATUS_NO_UPDATE && $status !== ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED;
 		}));
 
 		return self::render(__DIR__ . '/templates/tab.phtml', array(

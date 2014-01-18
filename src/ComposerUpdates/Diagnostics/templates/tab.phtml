@@ -1,4 +1,5 @@
 <style>
+#nette-debug .nette-composerUpdatesTab .not-installed,
 #nette-debug .nette-composerUpdatesTab .no-update,
 #nette-debug .nette-composerUpdatesTab .incompatible-update,
 #nette-debug .nette-composerUpdatesTab .compatible-update {
@@ -8,6 +9,9 @@
 	margin-top: 3px;
 	margin-bottom: -4px;
 	border-radius: 8px;
+}
+#nette-debug .nette-composerUpdatesTab .not-installed {
+	background: #B1B1B1;
 }
 #nette-debug .nette-composerUpdatesTab .no-update {
 	background: #599B4A;
@@ -22,6 +26,7 @@
 
 <?php
 $classes = array(
+	\ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED => 'not-installed',
 	\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE => 'no-update',
 	\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE => 'incompatible-update',
 	\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE => 'compatible-update',

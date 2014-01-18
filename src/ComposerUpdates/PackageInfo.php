@@ -4,9 +4,10 @@ namespace ComposerUpdates;
 
 class PackageInfo
 {
-	const STATUS_NO_UPDATE = 0;
-	const STATUS_INCOMPATIBLE_UPDATE = 1;
-	const STATUS_COMPATIBLE_UPDATE = 2;
+	const STATUS_NOT_INSTALLED = 0;
+	const STATUS_NO_UPDATE = 1;
+	const STATUS_INCOMPATIBLE_UPDATE = 2;
+	const STATUS_COMPATIBLE_UPDATE = 3;
 
 	/** @var string*/
 	private $name;
@@ -60,7 +61,9 @@ class PackageInfo
 	 */
 	public function getStatus()
 	{
-		if ($this->compatibleUpdates) {
+		if ($this->installedVersion instanceof NullVersion) {
+			return self::STATUS_NOT_INSTALLED;
+		} elseif ($this->compatibleUpdates) {
 			return self::STATUS_COMPATIBLE_UPDATE;
 		} elseif ($this->incompatibleUpdates) {
 			return self::STATUS_INCOMPATIBLE_UPDATE;
