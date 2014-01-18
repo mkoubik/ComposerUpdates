@@ -1,0 +1,25 @@
+<style>
+#nette-debug .nette-composerUpdatesTab .update-available,
+#nette-debug .nette-composerUpdatesTab .no-update {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-top: 3px;
+	margin-bottom: -4px;
+	border-radius: 8px;
+}
+#nette-debug .nette-composerUpdatesTab .update-available {
+	background: #FFC029;
+}
+#nette-debug .nette-composerUpdatesTab .no-update {
+	background: #599B4A;
+}
+</style>
+
+<span title="Composer updates" class="nette-composerUpdatesTab">
+	<?php if (!$updates) { ?>
+	<span class="update-available"></span>&nbsp;up to date
+	<?php } else { ?>
+	<span class="no-update"></span>&nbsp;<?php echo count($updates) . ' ' . (count($updates) === 1 ? 'update' : 'updates') ?>
+	<?php } ?>
+</span>

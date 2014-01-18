@@ -1,0 +1,67 @@
+<style>
+#nette-debug .nette-composerUpdatesPanel .nette-inner {
+	width: 500px;
+}
+#nette-debug .nette-composerUpdatesPanel table {
+	width: 100%;
+	white-space: nowrap;
+}
+#nette-debug .nette-composerUpdatesPanel td {
+	line-height: 20px;
+}
+#nette-debug .nette-composerUpdatesPanel span {
+	vertical-align: middle;
+	margin-top: -2px;
+}
+#nette-debug .nette-composerUpdatesPanel .update-available,
+#nette-debug .nette-composerUpdatesPanel .no-update {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	margin-right: 3px;
+}
+#nette-debug .nette-composerUpdatesPanel .update-available {
+	background: #FFC029;
+}
+#nette-debug .nette-composerUpdatesPanel .no-update {
+	background: #599B4A;
+}
+</style>
+
+<div class="nette-composerUpdatesPanel">
+	<h1>Composer updates</h1>
+	<div class="nette-inner">
+		<table>
+			<thead>
+				<tr>
+					<th>Package</th>
+					<th>Version</th>
+					<th>Update</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($packages as $package) { ?>
+				<tr>
+					<td>
+						<?php if ($package->isUpdateAvailable()) { ?>
+							<span class="update-available"></span>
+						<?php } else { ?>
+							<span class="no-update"></span>
+						<?php } ?>
+						<?php echo str_replace('/', ' / ', $package->getName()) ?>
+					</td>
+					<td>
+						<?php echo $package->getInstalledVersion() ?>
+					</td>
+					<td>
+						<?php if ($package->isUpdateAvailable()) { ?>
+						<?php echo $package->getAvailableVersion() ?> available
+						<?php } ?>
+					</td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -23,8 +23,17 @@ class ComposerUpdatesExtension extends Nette\DI\CompilerExtension
 			->setClass('ComposerUpdates\Service');
 
 		$builder->addDefinition($this->prefix('panel'))
-			->setClass('ComposerUpdates\Diagnostics\Panel')
-			->addSetup('register')
-			->addTag('run');
+			->setClass('ComposerUpdates\Diagnostics\ComposerUpdatesPanel');
+	}
+
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
+	{
+		$builder = $this->getContainerBuilder();
+		if ($builder->parameters['debugMode']) {
+			$class->methods['initialize']->addBody($builder->formatPhp(
+				'Nette\Diagnostics\Debugger::getBar()->addPanel(?);',
+				Nette\DI\Compiler::filterArguments(array(new Nette\DI\Statement($this->prefix('@panel'))))
+			));
+		}
 	}
 }
