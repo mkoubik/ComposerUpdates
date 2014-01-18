@@ -66,15 +66,15 @@ class PackageInfo
 
 	/**
 	 * @return bool
-	 */	 	
+	 */
 	public function isCompatibleUpdateAvailable()
 	{
 		return (bool) $this->compatibleUpdates;
 	}
-	
+
 	/**
 	 * @return bool
-	 */	 	
+	 */
 	public function isIncompatibleUpdateAvailable()
 	{
 		return (bool) $this->incompatibleUpdates;
@@ -93,7 +93,7 @@ class PackageInfo
 		}
 		return $max;
 	}
-	
+
 	/**
 	 * @return Version
 	 */

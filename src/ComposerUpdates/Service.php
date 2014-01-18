@@ -33,19 +33,19 @@ class Service
 	private function getPackagesFromRequires(array $requires)
 	{
 		$installedRepo = $this->initializer->getInstalledRepository();
-		$pool = $this->initializer->getPackagePool();
 
 		$installedVersions = array();
 		foreach ($installedRepo->getPackages() as $package) {
 			$installedVersions[$package->getName()] = new Version($package);
 		}
 
+		$pool = $this->initializer->getPackagePool();
 		$packages = array();
 
 		foreach ($requires as $link) {
 			$name = $link->getTarget();
 			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
-			
+
 			$provides = $pool->whatProvides($name, $link->getConstraint());
 			$versions = array_map(function ($package) {
 				return new Version($package);
@@ -53,7 +53,7 @@ class Service
 			$compatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
 				return $version->isGreaterThan($currentVersion);
 			});
-			
+
 			$provides = $pool->whatProvides($name);
 			$versions = array_map(function ($package) {
 				return new Version($package);
@@ -61,7 +61,7 @@ class Service
 			$incompatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
 				return $version->isGreaterThan($currentVersion);
 			});
-			
+
 			$packages[] = new PackageInfo($name, $installedVersions[$name], $compatibleUpdates, $incompatibleUpdates);
 		}
 

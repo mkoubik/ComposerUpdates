@@ -23,7 +23,7 @@ class Initializer
 	/** @var Composer\Repository\RepositoryInterface */
 	private $installedRepository;
 
-	/** @var Composer\PAckage\RootPackageInterface */
+	/** @var Composer\Package\RootPackageInterface */
 	private $rootPackage;
 
 	/** @var Composer\DependencyResolver\Pool */

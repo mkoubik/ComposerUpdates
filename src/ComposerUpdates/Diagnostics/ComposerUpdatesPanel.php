@@ -24,11 +24,11 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 		if (!$this->packages) {
 			return;
 		}
-		
+
 		$status = max(array_map(function(ComposerUpdates\PackageInfo $package) {
 			return $package->getStatus();
 		}, $this->packages));
-		
+
 		$updates = count(array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
 			return $package->getStatus();
 		}));
