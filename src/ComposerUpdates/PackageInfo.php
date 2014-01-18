@@ -37,6 +37,9 @@ class PackageInfo
 		return $this->installedVersion;
 	}
 
+	/**
+	 * @return bool
+	 */	 	
 	public function isUpdateAvailable()
 	{
 		return count($this->newVersions) > 0;
