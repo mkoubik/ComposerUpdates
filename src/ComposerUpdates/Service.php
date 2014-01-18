@@ -27,10 +27,10 @@ class Service
 	public function getDevPackages()
 	{
 		$requires = $this->initializer->getDevRequires();
-		return $this->getPackagesFromRequires($requires);
+		return $this->getPackagesFromRequires($requires, TRUE);
 	}
 
-	private function getPackagesFromRequires(array $requires)
+	private function getPackagesFromRequires(array $requires, $devOnly = FALSE)
 	{
 		$installedRepo = $this->initializer->getInstalledRepository();
 
@@ -62,7 +62,7 @@ class Service
 				return $version->isGreaterThan($currentVersion);
 			});
 
-			$packages[] = new PackageInfo($name, $installedVersions[$name], $compatibleUpdates, $incompatibleUpdates);
+			$packages[] = new PackageInfo($name, $currentVersion, $compatibleUpdates, $incompatibleUpdates, $devOnly);
 		}
 
 		return $packages;

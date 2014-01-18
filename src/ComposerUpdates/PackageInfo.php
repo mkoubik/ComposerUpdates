@@ -20,18 +20,23 @@ class PackageInfo
 	/** @var Version[] */
 	private $incompatibleUpdates;
 
+	/** @var bool */
+	private $devOnly;
+
 	/**
 	 * @param string $name
 	 * @param Version $installedVersion
 	 * @param Version[] $compatibleUpdates
 	 * @param Version[] $incompatibleUpdates
+	 * @param bool $devOnly	 
 	 */
-	public function __construct($name, Version $installedVersion, array $compatibleUpdates, array $incompatibleUpdates)
+	public function __construct($name, Version $installedVersion, array $compatibleUpdates, array $incompatibleUpdates, $devOnly)
 	{
 		$this->name = $name;
 		$this->installedVersion = $installedVersion;
 		$this->compatibleUpdates = $compatibleUpdates;
 		$this->incompatibleUpdates = $incompatibleUpdates;
+		$this->devOnly = $devOnly;
 	}
 
 	/**
@@ -62,6 +67,14 @@ class PackageInfo
 		} else {
 			return self::STATUS_NO_UPDATE;
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDevOnly()
+	{
+		return $this->devOnly;
 	}
 
 	/**

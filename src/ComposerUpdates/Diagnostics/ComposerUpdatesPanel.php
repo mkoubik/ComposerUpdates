@@ -21,7 +21,7 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 					$rootDir . '/composer.lock',
 				),
 			);
-			return $service->getPackages();
+			return array_merge($service->getPackages(), $service->getDevPackages());
 		});
 	}
 

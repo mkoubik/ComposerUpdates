@@ -59,6 +59,9 @@ $classes = array(
 					<td>
 						<span class="<?php echo $classes[$package->getStatus()] ?>"></span>
 						<?php echo str_replace('/', ' / ', $package->getName()) ?>
+						<?php if ($package->isDevOnly()) { ?>
+						<em>(dev only)</em>
+						<?php } ?>
 					</td>
 					<td>
 						<?php echo $package->getInstalledVersion() ?>
