@@ -3,6 +3,11 @@ php:
     - 5.3
     - 5.4
     - 5.5
+    - hhvm
+
+matrix:
+    allowed_failures:
+        - php: hhvm
 
 script: ./vendor/bin/tester -p php -s tests
 
