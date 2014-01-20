@@ -6,7 +6,7 @@ php:
     - hhvm
 
 matrix:
-    allowed_failures:
+    allow_failures:
         - php: hhvm
 
 script: ./vendor/bin/tester -p php -s tests
