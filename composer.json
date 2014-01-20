@@ -6,6 +6,7 @@
 			"email": "matej@koubik.name"
 		}
 	],
+	"license": ["BSD-2-Clause"],
 	"require": {
 		"nette/nette": "~2.1.0",
 		"composer/composer": "@dev",
