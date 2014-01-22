@@ -44,6 +44,9 @@ class Service
 
 		foreach ($requires as $link) {
 			$name = $link->getTarget();
+			if (strpos($name, '/') === FALSE) {
+				continue;
+			}
 			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
 
 			$provides = $pool->whatProvides($name, $link->getConstraint());
