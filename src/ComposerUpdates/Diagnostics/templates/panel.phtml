@@ -35,6 +35,12 @@
 #nette-debug .nette-composerUpdatesPanel .compatible-update {
 	background: #E60000;
 }
+#nette-debug .nette-composerUpdatesPanel abbr {
+	border-bottom: 1px dotted gray;
+}
+#nette-debug .nette-composerUpdatesPanel .notes {
+	margin-bottom: 10px;
+}
 </style>
 
 <?php
@@ -49,6 +55,12 @@ $classes = array(
 <div class="nette-composerUpdatesPanel">
 	<h1>Composer updates</h1>
 	<div class="nette-inner">
+		<ul class="notes">
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE] ?>"></span> There is no newer version of this library.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE] ?>"></span> There is newer version but it may not be compatible with your project. Update with caution.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE] ?>"></span> There is newer version <abbr title="according to YOUR version constraints">compatible with your project</abbr>. Update is recommended.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED] ?>"></span> This library is not currently installed.</li>
+		</ul>
 		<table>
 			<thead>
 				<tr>
