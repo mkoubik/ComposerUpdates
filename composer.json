@@ -1,5 +1,6 @@
 {
 	"name": "mkoubik/composer-updates",
+	"description": "Tracy panel with outdated composer packages",
 	"authors": [
 		{
 			"name": "Matej Koubik",
@@ -9,8 +10,8 @@
 	"license": ["BSD-2-Clause"],
 	"require": {
 		"nette/nette": "~2.1.0",
-		"composer/composer": "@dev",
-		"icecave/semver": "@dev"
+		"composer/composer": "*",
+		"icecave/semver": "*"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
