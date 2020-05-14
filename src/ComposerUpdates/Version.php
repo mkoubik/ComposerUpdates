@@ -17,13 +17,11 @@ class Version
 	public function __construct(PackageInterface $package)
 	{
 		$this->version = $package->getVersion();
-		$this->prettyVersion = $package->getPrettyVersion();
-
 		// v0.9.0-alpha5 => 0.9.0-alpha5
-		$semverString = preg_replace('/^v/', '', $this->prettyVersion);
+		$this->prettyVersion = preg_replace('/^v/', '', $package->getPrettyVersion());
 
 		try {
-			$this->semver = SemVer\Version::parse($semverString);
+			$this->semver = SemVer\Version::parse($this->prettyVersion);
 		} catch (\InvalidArgumentException $e) {
 			$this->semver = NULL;
 		}

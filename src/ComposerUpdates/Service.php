@@ -27,32 +27,45 @@ class Service
 	public function getDevPackages()
 	{
 		$requires = $this->initializer->getDevRequires();
-		return $this->getPackagesFromRequires($requires);
+		return $this->getPackagesFromRequires($requires, TRUE);
 	}
 
-	private function getPackagesFromRequires(array $requires)
+	private function getPackagesFromRequires(array $requires, $devOnly = FALSE)
 	{
 		$installedRepo = $this->initializer->getInstalledRepository();
-		$pool = $this->initializer->getPackagePool();
 
 		$installedVersions = array();
 		foreach ($installedRepo->getPackages() as $package) {
 			$installedVersions[$package->getName()] = new Version($package);
 		}
 
+		$pool = $this->initializer->getPackagePool();
 		$packages = array();
 
 		foreach ($requires as $link) {
 			$name = $link->getTarget();
+			if (strpos($name, '/') === FALSE) {
+				continue;
+			}
+			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
+
 			$provides = $pool->whatProvides($name, $link->getConstraint());
 			$versions = array_map(function ($package) {
 				return new Version($package);
 			}, $provides);
-			$currentVersion = isset($installedVersions[$name]) ? $installedVersions[$name] : new NullVersion();
-			$newVersions = array_filter($versions, function($version) use ($currentVersion) {
+			$compatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
 				return $version->isGreaterThan($currentVersion);
 			});
-			$packages[] = new PackageInfo($name, $installedVersions[$name], $newVersions);
+
+			$provides = $pool->whatProvides($name);
+			$versions = array_map(function ($package) {
+				return new Version($package);
+			}, $provides);
+			$incompatibleUpdates = array_filter($versions, function($version) use ($currentVersion) {
+				return $version->isGreaterThan($currentVersion);
+			});
+
+			$packages[] = new PackageInfo($name, $currentVersion, $compatibleUpdates, $incompatibleUpdates, $devOnly);
 		}
 
 		return $packages;

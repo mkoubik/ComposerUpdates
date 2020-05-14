@@ -8,27 +8,27 @@ class ComposerUpdatesExtension extends Nette\DI\CompilerExtension
 {
 	private $defaults = array(
 		'cacheDir' => NULL,
-		'localConfigFile' => NULL,
+		'rootDir' => NULL,
 	);
 
 	public function loadConfiguration()
 	{
 		$config = $this->getConfig($this->defaults);
 
-		if (!is_dir($config['cacheDir']) || !is_file($config['localConfigFile'])) {
+		if (!is_dir($config['cacheDir']) || !is_dir($config['rootDir'])) {
 			throw new \InvalidArgumentException("Please configure the ComposerUpdates extensions using the section '{$this->name}:' in your config file.");
 		}
 
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('initializer'))
-			->setClass('ComposerUpdates\Initializer', array($config['cacheDir'], $config['localConfigFile']));
+			->setClass('ComposerUpdates\Initializer', array($config['cacheDir'], $config['rootDir']));
 
 		$builder->addDefinition($this->prefix('service'))
 			->setClass('ComposerUpdates\Service');
 
 		$builder->addDefinition($this->prefix('panel'))
-			->setClass('ComposerUpdates\Diagnostics\ComposerUpdatesPanel');
+			->setClass('ComposerUpdates\Diagnostics\ComposerUpdatesPanel', array($config['rootDir']));
 	}
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)

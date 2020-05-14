@@ -1,6 +1,6 @@
 <style>
 #nette-debug .nette-composerUpdatesPanel .nette-inner {
-	width: 500px;
+	width: 700px;
 }
 #nette-debug .nette-composerUpdatesPanel table {
 	width: 100%;
@@ -13,50 +13,84 @@
 	vertical-align: middle;
 	margin-top: -2px;
 }
-#nette-debug .nette-composerUpdatesPanel .update-available,
-#nette-debug .nette-composerUpdatesPanel .no-update {
+#nette-debug .nette-composerUpdatesPanel .not-installed,
+#nette-debug .nette-composerUpdatesPanel .no-update,
+#nette-debug .nette-composerUpdatesPanel .incompatible-update,
+#nette-debug .nette-composerUpdatesPanel .compatible-update {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 	border-radius: 8px;
 	margin-right: 3px;
 }
-#nette-debug .nette-composerUpdatesPanel .update-available {
-	background: #FFC029;
+#nette-debug .nette-composerUpdatesPanel .not-installed {
+	background: #B1B1B1;
 }
 #nette-debug .nette-composerUpdatesPanel .no-update {
 	background: #599B4A;
 }
+#nette-debug .nette-composerUpdatesPanel .incompatible-update {
+	background: #FFC029;
+}
+#nette-debug .nette-composerUpdatesPanel .compatible-update {
+	background: #E60000;
+}
+#nette-debug .nette-composerUpdatesPanel abbr {
+	border-bottom: 1px dotted gray;
+}
+#nette-debug .nette-composerUpdatesPanel .notes {
+	margin-bottom: 10px;
+}
 </style>
+
+<?php
+$classes = array(
+	\ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED => 'not-installed',
+	\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE => 'no-update',
+	\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE => 'incompatible-update',
+	\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE => 'compatible-update',
+);
+?>
 
 <div class="nette-composerUpdatesPanel">
 	<h1>Composer updates</h1>
 	<div class="nette-inner">
+		<ul class="notes">
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_NO_UPDATE] ?>"></span> There is no newer version of this library.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_INCOMPATIBLE_UPDATE] ?>"></span> There is newer version but it may not be compatible with your project. Update with caution.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_COMPATIBLE_UPDATE] ?>"></span> There is newer version <abbr title="according to YOUR version constraints">compatible with your project</abbr>. Update is recommended.</li>
+			<li><span class="<?php echo $classes[\ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED] ?>"></span> This library is not currently installed.</li>
+		</ul>
 		<table>
 			<thead>
 				<tr>
 					<th>Package</th>
 					<th>Version</th>
-					<th>Update</th>
+					<th>Compatible</th>
+					<th>Incompatible</th>
 				</tr>
 			</thead>
 			<tbody>
 			<?php foreach ($packages as $package) { ?>
 				<tr>
 					<td>
-						<?php if ($package->isUpdateAvailable()) { ?>
-							<span class="update-available"></span>
-						<?php } else { ?>
-							<span class="no-update"></span>
-						<?php } ?>
+						<span class="<?php echo $classes[$package->getStatus()] ?>"></span>
 						<?php echo str_replace('/', ' / ', $package->getName()) ?>
+						<?php if ($package->isDevOnly()) { ?>
+						<em>(dev only)</em>
+						<?php } ?>
 					</td>
 					<td>
 						<?php echo $package->getInstalledVersion() ?>
 					</td>
 					<td>
-						<?php if ($package->isUpdateAvailable()) { ?>
-						<?php echo $package->getAvailableVersion() ?> available
+						<?php if ($package->isCompatibleUpdateAvailable()) { ?>
+						<?php echo $package->getCompatibleUpdate() ?> available
+						<?php } ?>
+					</td>
+					<td>
+						<?php if ($package->isIncompatibleUpdateAvailable()) { ?>
+						<?php echo $package->getIncompatibleUpdate() ?> available
 						<?php } ?>
 					</td>
 				</tr>

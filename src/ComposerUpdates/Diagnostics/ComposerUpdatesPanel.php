@@ -10,9 +10,19 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	/** @var ComposerUpdates\PackageInfo[] */
 	private $packages;
 
-	public function __construct(ComposerUpdates\Service $service)
+	public function __construct($rootDir, ComposerUpdates\Service $service, Nette\Caching\IStorage $storage)
 	{
-		$this->packages = $service->getPackages();
+		$cache = new Nette\Caching\Cache($storage, 'ComposerUpdates.panel');
+		$this->packages = $cache->load($rootDir, function (& $dependencies) use ($rootDir, $service) {
+			$dependencies = array(
+				Nette\Caching\Cache::EXPIRATION => '1 hour',
+				Nette\Caching\Cache::FILES => array(
+					$rootDir . '/composer.json',
+					$rootDir . '/composer.lock',
+				),
+			);
+			return array_merge($service->getPackages(), $service->getDevPackages());
+		});
 	}
 
 	/**
@@ -21,15 +31,21 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	 */
 	public function getTab()
 	{
-		if (empty($this->packages)) {
+		if (!$this->packages) {
 			return;
 		}
-		
-		$updates = array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
-			return $package->isUpdateAvailable();
-		});
+
+		$status = max(array_map(function(ComposerUpdates\PackageInfo $package) {
+			return $package->getStatus();
+		}, $this->packages));
+
+		$updates = count(array_filter($this->packages, function(ComposerUpdates\PackageInfo $package) {
+			$status = $package->getStatus();
+			return $status !== ComposerUpdates\PackageInfo::STATUS_NO_UPDATE && $status !== ComposerUpdates\PackageInfo::STATUS_NOT_INSTALLED;
+		}));
 
 		return self::render(__DIR__ . '/templates/tab.phtml', array(
+			'status' => $status,
 			'updates' => $updates,
 		));
 	}
@@ -40,18 +56,19 @@ class ComposerUpdatesPanel extends Nette\Object implements Nette\Diagnostics\IBa
 	 */
 	public function getPanel()
 	{
-		if (empty($this->packages)) {
+		if (!$this->packages) {
 			return;
 		}
 
-		uasort($this->packages, function (ComposerUpdates\PackageInfo $package1, ComposerUpdates\PackageInfo $package2) {
-			$update1 = $package1->isUpdateAvailable();
-			$update2 = $package2->isUpdateAvailable();
-			return $update1 !== $update2 ? $update1 < $update2 : $package1->getName() > $package2->getName();
+		$packages = $this->packages;
+		uksort($packages, function ($key1, $key2) use ($packages) {
+			$status1 = $packages[$key1]->getStatus();
+			$status2 = $packages[$key2]->getStatus();
+			return $status1 !== $status2 ? $status1 < $status2 : $key1 > $key2;
 		});
 
 		return self::render(__DIR__ . '/templates/panel.phtml', array(
-			'packages' => $this->packages,
+			'packages' => $packages,
 		));
 	}
 

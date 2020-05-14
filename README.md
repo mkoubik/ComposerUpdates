@@ -22,7 +22,7 @@ $configurator->onCompile[] = function ($config, Nette\Config\Compiler $compiler)
 
 composerUpdates:
 	cacheDir: %tempDir%/cache
-	localConfigFile: %wwwDir%/../composer.json
+	rootDir: %wwwDir%/..
 ```
 
 Screenshots
